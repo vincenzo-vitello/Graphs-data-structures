@@ -32,6 +32,25 @@ class Graph { // creating a graph class
             console.log(`${vertex} -> ${neighbors}`);
         }
     }
+    breadthFirstSearch(start) {
+        let queue = [start];
+        let result = [];
+        let visited = {};
+
+        visited[start] = true;
+        
+        while(queue.length > 0) {
+            let current = queue.shift();
+            result.push(current);
+            this.adjList.get(current).forEach(neighbor => {
+                if(!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    queue.push(neighbor)
+                }
+            })
+        }
+        return result
+    }
 }
 
 const graph = new Graph();
@@ -40,4 +59,5 @@ graph.addVertex("A");
 graph.addVertex("B");
 graph.addEdge("A", "B");
 
-graph.printGraph()
+graph.printGraph();
+console.log(graph.breadthFirstSearch('A'));
