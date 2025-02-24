@@ -50,7 +50,8 @@ class Graph { // creating a graph class
                 }
             })
         }
-        console.log("BFS: ", result) // log result array
+        console.log("BFS: ", result); // log result array
+        return result
     }
     depthFirstSearch(start) {
        // initialize an empty stack, empty result array & a visited map
@@ -70,7 +71,23 @@ class Graph { // creating a graph class
                     stack.push(neighbor)
                 }
             })
-       } console.log("DFS: ", result) // logging result
+       } 
+       console.log("DFS: ", result); // logging result
+       return result
+    }
+    connectedComponents() {
+        let visited = new Set();
+        let count = 0;
+
+        for(let node of this.adjList.keys()) {
+            if(!visited.has(node)) {
+                let nodes = this.depthFirstSearch(node);
+                nodes.forEach(element => visited.add(element));
+                count++ 
+            }
+        } 
+        console.log('connected components count: ', count)
+        return count 
     }
 }
 
@@ -79,8 +96,12 @@ const graph = new Graph();
 graph.addVertex("A");
 graph.addVertex("B");
 graph.addEdge("A", "B");
+graph.addVertex("C");
+graph.addVertex("D");
+graph.addEdge("C", "D");
 
 graph.printGraph();
 graph.breadthFirstSearch('A');
 graph.breadthFirstSearch('B');
 graph.depthFirstSearch('A')
+graph.connectedComponents()
