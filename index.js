@@ -33,23 +33,44 @@ class Graph { // creating a graph class
         }
     }
     breadthFirstSearch(start) {
-        let queue = [start];
+        // initializing an empty queue, empty result array & a visited map
+        let queue = [start]; //Add the starting vertex to the queue
         let result = [];
         let visited = {};
-
+        //add the starting vertex to the visited Map
         visited[start] = true;
         
-        while(queue.length > 0) {
-            let current = queue.shift();
-            result.push(current);
-            this.adjList.get(current).forEach(neighbor => {
+        while(queue.length) {
+            let current = queue.shift(); //dequeue and store current vertex
+            result.push(current); // add current vertex to result array
+            this.adjList.get(current).forEach(neighbor => { //foreach vertex, if vertex is not visited, add it to the visited map and enqueue vertex
                 if(!visited[neighbor]) {
                     visited[neighbor] = true;
                     queue.push(neighbor)
                 }
             })
         }
-        return result
+        console.log("BFS: ", result) // log result array
+    }
+    depthFirstSearch(start) {
+       // initialize an empty stack, empty result array & a visited map
+       const stack = [start]; //adding start to the stack
+       const result = [];
+       const visited = {};
+    
+       visited[start] = true; // adding start to visited Map
+
+       while(stack.length) {
+            let current = stack.pop(); // popping and storing current vertex
+            result.push(current); // pushing current to result array
+
+            this.adjList.get(current).forEach(neighbor => { //foreach vertex, if it's unvisited add it to the visited Map and pushing it's neighbor to the stack
+                if(!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    stack.push(neighbor)
+                }
+            })
+       } console.log("DFS: ", result) // logging result
     }
 }
 
@@ -60,4 +81,6 @@ graph.addVertex("B");
 graph.addEdge("A", "B");
 
 graph.printGraph();
-console.log(graph.breadthFirstSearch('A'));
+graph.breadthFirstSearch('A');
+graph.breadthFirstSearch('B');
+graph.depthFirstSearch('A')
