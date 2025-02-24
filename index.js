@@ -76,19 +76,24 @@ class Graph { // creating a graph class
        return result
     }
     connectedComponents() {
-        let visited = new Set();
-        let count = 0;
+        let visited = new Set(); // initialize a set to keep track of visited nodes
+        let count = 0; // counter for the number of connected components
 
         for(let node of this.adjList.keys()) {
+            // if the node has not been visited, it means it's part of a new connected component
             if(!visited.has(node)) {
+                // perform a search to visit all nodes in this component
                 let nodes = this.depthFirstSearch(node);
+                // mark all nodes in this component as visited
                 nodes.forEach(element => visited.add(element));
-                count++ 
+                // increment the connected components count
+                count++; 
             }
         } 
-        console.log('connected components count: ', count)
-        return count 
+        console.log('connected components count: ', count); 
+        return count;
     }
+
 }
 
 const graph = new Graph();
@@ -103,5 +108,46 @@ graph.addEdge("C", "D");
 graph.printGraph();
 graph.breadthFirstSearch('A');
 graph.breadthFirstSearch('B');
-graph.depthFirstSearch('A')
-graph.connectedComponents()
+graph.depthFirstSearch('A');
+graph.connectedComponents();
+
+
+Graph.prototype.dijkstra = function(start) {
+    let distances = {}; // create an object to store the shortest distance from the start node to every other node
+    let visited = new Set(); // to keep track of all visited nodes
+    let nodes = [...this.adjList.keys()]; // store all the nodes
+
+    // Initially, set the shortest distance to every node as Infinity
+    for (let node of nodes) {
+        distances[node] = Infinity;
+    }
+
+    // the distance from the start node to itself is 0
+    distances[start] = 0;
+
+    while (nodes.length) {
+        // sort nodes by distance and pick the closest unvisited node
+        nodes.sort((a, b) => distances[a] - distances[b]);
+        let closestNode = nodes.shift();
+        // mark the chosen node as visited
+        visited.add(closestNode);
+
+        // If the smallest distance is Infinity, it means remaining nodes are unreachable
+        if (distances[closestNode] === Infinity) break;
+
+        // update the distances to neighboring nodes (treating all edges as weight 1)
+        for (let neighbor of this.adjList.get(closestNode)) {
+            if (!visited.has(neighbor)) { // if the neighbor hasn't been visited yet
+                let newDistance = distances[closestNode] + 1; // treat all edges as having weight 1
+
+                if (newDistance < distances[neighbor]) { // if it's shorter than the previous distance to this neighbor, update it
+                    distances[neighbor] = newDistance;
+                }
+            }
+        }
+    }
+
+    console.log("distances: ", distances);
+    return distances;
+}
+graph.dijkstra('A')
